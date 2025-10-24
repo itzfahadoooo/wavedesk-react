@@ -3,15 +3,18 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "@/hooks/useAuth"
+import { useToast } from "@/hooks/useToast"
 import { LogOut, Menu, X, Waves } from "lucide-react"
 
 export default function Navbar() {
   const { isAuthenticated, logout } = useAuth()
+  const { showToast } = useToast()
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const handleLogout = () => {
     logout()
+    showToast("Logout successful!", "success")
     navigate("/")
     setIsMenuOpen(false)
   }
