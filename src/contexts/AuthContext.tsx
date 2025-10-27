@@ -12,6 +12,7 @@ interface User {
 interface AuthContextType {
   user: Omit<User, "password"> | null
   isAuthenticated: boolean
+  isLoading: boolean
   login: (email: string, password: string) => Promise<void>
   signup: (email: string, password: string) => Promise<void>
   logout: () => void
@@ -30,6 +31,7 @@ const AUTO_LOGIN = false // <-- set to true for automatic demo sign-in
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<Omit<User, "password"> | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   // Load session
   useEffect(() => {
@@ -41,6 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem("ticketapp_session")
       }
     }
+    setIsLoading(false)
   }, [])
 
   // Simulated local "database" helpers
@@ -106,7 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   )
